@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import { nanoid } from 'nanoid';
 import Notiflix from 'notiflix';
 import s from './phonebook.module.css';
@@ -8,9 +9,31 @@ import Modal from './Modal';
 
 export class App extends Component {
   state = {
+      images:null,
     showModal: false,
+    options: {
+      params: {
+        key: '25851309-821f4925948fb0248b82aee73',
+        q: '',
+        image_type: 'photo',
+        orientation: 'horizontal',
+        safesearch: true,
+        page: 1,
+        per_page: 39,
+      },
+    },
   };
 
+  //   async getPictures() {
+  //     const response = await axios.get('https://pixabay.com/api/', this.options);
+  //     this.incrementPage();
+  //     return response;
+  //   }
+ async componentDidMount() {
+     axios.get('https://pixabay.com/api/', this.state.options)
+      .then(images=>this.setState({images}));
+    // return response;
+  }
   toggleModal = () => {
     this.setState(({ showModal }) => ({
       showModal: !showModal,
@@ -25,21 +48,28 @@ export class App extends Component {
         <ImageGalleryItem /> 
         <Loader />
         <Button /> */}
-        <div className={s.Searchbar}>
+        {/* <div className={s.Searchbar}>
           <form className={s.SearchForm}>
             <input
-              type="text"
-              name="searchQuery"
               className={s.SearchForm__input}
+              type="text"
               autocomplete="off"
-              placeholder="Search images..."
+              autofocus
+              placeholder="Search images and photos"
             />
-            <button className={s.SearchForm__button} type="submit"></button>
+            <button type="submit" className={s.SearchForm__button}>
+              <span className={s.SearchForm__button__label}>Search</span>
+            </button>
           </form>
-        </div>
-        <div className={s.ImageGallery}></div>
-        <button className={s.Button} type="button">Load more</button>
-        {/* <button className={s.Button} onClick={this.toggleModal} type="button">
+        </div> */}
+        <container>
+          {this.state.images && (<ul className={s.ImageGallery}><div>{this.state.images.data.total}</div></ul>)}
+          <button className={s.Button} type="button">
+            Load more
+          </button>
+        </container>
+        {/* 
+        <button className={s.Button} onClick={this.toggleModal} type="button">
           Open modal
         </button>
         {this.state.showModal && (
