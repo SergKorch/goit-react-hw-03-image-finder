@@ -4,7 +4,7 @@ import ImageGalleryItem from './ImageGalleryItem';
 import s from './gallery.module.css';
 import ImageAPI from 'components/imageAPI';
 import Loader from '../Loader';
-import { Watch } from 'react-loader-spinner';
+import {Spinner} from 'spin.js';
 class ImageGallery extends Component {
   state = {
     loading: false,
@@ -15,7 +15,7 @@ class ImageGallery extends Component {
     const nextSearch = this.props.imageName;
     if (prevProps.imageName !== nextSearch) {
       this.setState({ loading: true, images: null });
-      ImageAPI(nextSearch, 1)
+      ImageAPI(nextSearch, this.props.page)
         .then(images => this.setState({ images }))
         .catch(error => this.setState(error))
         .finally(() => this.setState({ loading: false }));
@@ -28,15 +28,8 @@ class ImageGallery extends Component {
       <div>
         {this.state.error && <p>ERROR</p>}
 
-        {this.state.loading &&  (<div >
-            <Watch
-              color="#00BFFF"
-              height={200}
-              width={200}
-              ariaLabel="loading"
-            />
-          </div>)}
-        <ul className={s.ImageGallery}>
+        {this.state.loading && <Loader />}
+        <ul id='gallerySection' className={s.ImageGallery}>
           {this.state.images &&
             this.state.images.data.hits.map(
               ({ id, webformatURL, largeImageURL, tags }) => (

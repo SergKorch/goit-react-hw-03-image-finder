@@ -5,7 +5,7 @@ import Modal from './Modal';
 import ImageGallery from './ImageGallery';
 import Searchbar from './Searchbar';
 import Button from './Button';
-
+import {Spinner} from 'spin.js';
 import ImageAPI from './imageAPI';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -15,6 +15,7 @@ export class App extends Component {
     imageName: '',
     showModal: false,
     loading: false,
+    page:1,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -33,7 +34,11 @@ export class App extends Component {
     }
     return;
   }
-
+  onClick=()=> {
+    this.setState(({ page }) => {
+      return { page: page + 1 };
+    });
+  }
   // toggleModal = () => {
   //   this.setState(({ showModal }) => ({
   //     showModal: !showModal,
@@ -55,9 +60,9 @@ export class App extends Component {
           draggable
           pauseOnHover
         />
-        <ImageGallery imageName={this.state.imageName} onData={this.onData}/>
+        <ImageGallery imageName={this.state.imageName} onData={this.onData} page={this.state.page}/>
         
-        {this.state.images && <Button page={1} />}
+        {this.state.images && <Button onClick={this.onClick} />}
         {/* 
         <button className={s.Button} onClick={this.toggleModal} type="button">
           Open modal
