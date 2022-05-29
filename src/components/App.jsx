@@ -10,7 +10,9 @@ import Modal from './Modal';
 export class App extends Component {
   state = {
       images:null,
+      imageName:'',
     showModal: false,
+    loading: false,
     options: {
       params: {
         key: '25851309-821f4925948fb0248b82aee73',
@@ -24,14 +26,18 @@ export class App extends Component {
     },
   };
 
-  //   async getPictures() {
-  //     const response = await axios.get('https://pixabay.com/api/', this.options);
-  //     this.incrementPage();
-  //     return response;
-  //   }
+handleNameChange=e=>{
+  this.setState({imageName: e.currentTarget.value.toLowerCase()})
+}
+handleSubmit=e=>{
+  e.preventDefault()
+  this.props.onSubmit(this.state.imageName)
+  this.setState({imageName: ''})
+}
  async componentDidMount() {
+   this.setState({loading:true})
      axios.get('https://pixabay.com/api/', this.state.options)
-      .then(images=>this.setState({images}));
+      .then(images=>this.setState({images})).finally(()=> this.setState({loading:false}));
     // return response;
   }
   toggleModal = () => {
@@ -48,22 +54,25 @@ export class App extends Component {
         <ImageGalleryItem /> 
         <Loader />
         <Button /> */}
-        {/* <div className={s.Searchbar}>
-          <form className={s.SearchForm}>
+        <div className={s.Searchbar}>
+          <form onSubmit={this.handleSubmit} className={s.SearchForm}>
             <input
               className={s.SearchForm__input}
               type="text"
               autocomplete="off"
               autofocus
               placeholder="Search images and photos"
+              value={this.state.imageName}
+              onChange={this.handleNameChange}
             />
             <button type="submit" className={s.SearchForm__button}>
               <span className={s.SearchForm__button__label}>Search</span>
             </button>
           </form>
-        </div> */}
+        </div>
         <container>
-          {this.state.images && (<ul className={s.ImageGallery}><div>{this.state.images.data.total}</div></ul>)}
+          {this.state.loading && <p>Loading...</p>}
+          {this.state.images && (<ul className={s.ImageGallery}><div>{this.state.images.data.hits[0].user}</div></ul>)}
           <button className={s.Button} type="button">
             Load more
           </button>
