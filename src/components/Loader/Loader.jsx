@@ -4,11 +4,6 @@ import {Spinner} from 'spin.js';
 // import PropTypes from 'prop-types';
 // import s from './ContactListItem.module.css';
 
-
-
-
-
-
 const Loader = ({ loading }) => {
     var opts = {
         lines: 13, // The number of lines to draw

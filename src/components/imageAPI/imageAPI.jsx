@@ -14,5 +14,10 @@ const ImageAPI = (q, page) => {
   }
   return axios.get('https://pixabay.com/api/', options)
 };
-
+// .then(response => {
+//   if (response.ok) {
+//     return response.json();
+//   }
+//   return Promise.reject(new Error('No correct Name'));
+// }).
 export default ImageAPI;

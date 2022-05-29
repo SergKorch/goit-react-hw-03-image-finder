@@ -5,7 +5,7 @@ import Modal from './Modal';
 import ImageGallery from './ImageGallery';
 import Searchbar from './Searchbar';
 import Button from './Button';
-import Loader from './Loader';
+
 import ImageAPI from './imageAPI';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -21,12 +21,18 @@ export class App extends Component {
     console.log(prevProps.imageName);
     console.log(this.props.imageName);
   }
-  handleSubmit = searchName => {
+  handleSubmit = (searchName)  => {
     if (this.state.imageName !== searchName) {
-      this.setState({ imageName: searchName });
+      this.setState({ imageName: searchName});
     }
     return;
   };
+  onData=(imagesNew)=>{
+    if (this.state.images !== imagesNew) {
+      this.setState({ images: imagesNew});
+    }
+    return;
+  }
 
   // toggleModal = () => {
   //   this.setState(({ showModal }) => ({
@@ -49,9 +55,9 @@ export class App extends Component {
           draggable
           pauseOnHover
         />
-        <ImageGallery imageName={this.state.imageName}/>
-        {/*<Loader loading={this.state.loading />} */}
-        {/* {this.state.images && <Button page={1} />} */}
+        <ImageGallery imageName={this.state.imageName} onData={this.onData}/>
+        
+        {this.state.images && <Button page={1} />}
         {/* 
         <button className={s.Button} onClick={this.toggleModal} type="button">
           Open modal

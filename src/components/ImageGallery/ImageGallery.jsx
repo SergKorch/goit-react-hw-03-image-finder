@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 import ImageGalleryItem from './ImageGalleryItem';
 import s from './gallery.module.css';
 import ImageAPI from 'components/imageAPI';
-
-// const ImageGallery = ({ images }) =>
+import Loader from '../Loader';
+import { Watch } from 'react-loader-spinner';
 class ImageGallery extends Component {
   state = {
     loading: false,
@@ -14,19 +14,28 @@ class ImageGallery extends Component {
   componentDidUpdate(prevProps, prevState) {
     const nextSearch = this.props.imageName;
     if (prevProps.imageName !== nextSearch) {
-      this.setState({ loading: true });
+      this.setState({ loading: true, images: null });
       ImageAPI(nextSearch, 1)
         .then(images => this.setState({ images }))
-        .catch((error) => this.setState(error))
+        .catch(error => this.setState(error))
         .finally(() => this.setState({ loading: false }));
+        
     }
+    this.props.onData(this.state.images);
   }
   render() {
     return (
       <div>
         {this.state.error && <p>ERROR</p>}
-        {!this.state.images && <p>enter search</p>}
-        {this.state.loading && <p>ЗАГРУЗКА</p> }
+
+        {this.state.loading &&  (<div >
+            <Watch
+              color="#00BFFF"
+              height={200}
+              width={200}
+              ariaLabel="loading"
+            />
+          </div>)}
         <ul className={s.ImageGallery}>
           {this.state.images &&
             this.state.images.data.hits.map(
