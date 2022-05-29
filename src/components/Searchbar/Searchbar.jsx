@@ -1,38 +1,51 @@
-
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
-import s from './search.module.css'
+import PropTypes from 'prop-types';
+import s from './search.module.css';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export class Searchbar extends Component {
-    state = {
-        images:null,
-        imageName:'',
-          options: {
-        params: {
-          key: '25851309-821f4925948fb0248b82aee73',
-          q: '',
-          image_type: 'photo',
-          orientation: 'horizontal',
-          safesearch: true,
-          page: 1,
-          per_page: 39,
-        },
-      },
-    };
-  
-  handleNameChange=e=>{
-    this.setState({imageName: e.currentTarget.value.toLowerCase()})
-  }
-  handleSubmit=e=>{
-    e.preventDefault()
-    // this.props.onSubmit(this.state.imageName)
-    this.setState({imageName: ''})
-  }
- 
-    render() {
-      return (
-        <div className={s.Searchbar}>
+  static defaultProps = { onSubmit: null };
+
+  static propTypes = {
+    onSubmit: PropTypes.func.isRequired,
+  };
+  state = {
+    imageName: '',
+
+  };
+
+  handleNameChange = e => {
+    const { value } = e.currentTarget;
+    this.setState({ imageName: value.toLowerCase() });
+  };
+  handleSubmit = e => {
+    e.preventDefault();
+    const {imageName}=this.state
+    const normalizeImageName = imageName.trim();
+    if (!normalizeImageName) {
+      toast.warn('Введите поиск!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        });
+      return;
+    }
+    this.props.onSubmit(normalizeImageName);
+    this.setState({ imageName: '' });
+  };
+
+  render() {
+    return (
+      <header className={s.Searchbar}>
         <form onSubmit={this.handleSubmit} className={s.SearchForm}>
+          <button type="submit" className={s.SearchForm__button}>
+            <span className={s.SearchForm__button__label}>Search</span>
+          </button>
           <input
             className={s.SearchForm__input}
             type="text"
@@ -42,15 +55,11 @@ export class Searchbar extends Component {
             value={this.state.imageName}
             onChange={this.handleNameChange}
           />
-          <button type="submit" className={s.SearchForm__button}>
-            <span className={s.SearchForm__button__label}>Search</span>
-          </button>
         </form>
-      </div>
-      );
-    }
+      </header>
+    );
   }
-  
+}
 
 // ContactListItem.propTypes = {
 //   id: PropTypes.string.isRequired,

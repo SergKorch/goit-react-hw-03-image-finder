@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
-import { nanoid } from 'nanoid';
 import Notiflix from 'notiflix';
 import s from './phonebook.module.css';
 import Modal from './Modal';
@@ -8,35 +6,52 @@ import ImageGallery from './ImageGallery';
 import Searchbar from './Searchbar';
 import Button from './Button';
 import Loader from './Loader';
+import ImageAPI from './imageAPI';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export class App extends Component {
   state = {
-    images: null,
     imageName: '',
     showModal: false,
     loading: false,
   };
 
-  componentDidMount() {
-    this.setState({ loading: true });
-    axios
-      .get('https://pixabay.com/api/', this.state.options)
-      .then(images => this.setState({ images }))
-      .finally(() => this.setState({ loading: false }));
+  componentDidUpdate(prevProps, prevState) {
+    console.log(prevProps.imageName);
+    console.log(this.props.imageName);
   }
-  toggleModal = () => {
-    this.setState(({ showModal }) => ({
-      showModal: !showModal,
-    }));
+  handleSubmit = searchName => {
+    if (this.state.imageName !== searchName) {
+      this.setState({ imageName: searchName });
+    }
+    return;
   };
+
+  // toggleModal = () => {
+  //   this.setState(({ showModal }) => ({
+  //     showModal: !showModal,
+  //   }));
+  // };
 
   render() {
     return (
       <div className={s.App}>
-        <Searchbar />
-        <ImageGallery images={this.state.images} />
-        {/* <Loader loading={this.state.loading} /> */}
-        <Button page={1} />
+        <Searchbar onSubmit={this.handleSubmit} />
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
+        <ImageGallery imageName={this.state.imageName}/>
+        {/*<Loader loading={this.state.loading />} */}
+        {/* {this.state.images && <Button page={1} />} */}
         {/* 
         <button className={s.Button} onClick={this.toggleModal} type="button">
           Open modal
