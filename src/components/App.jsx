@@ -12,9 +12,10 @@ import 'react-toastify/dist/ReactToastify.css';
 export class App extends Component {
   state = {
     imageName: '',
-
     loading: false,
     page: 1,
+    images: null,
+    imagesNew: null,
   };
 
   handleSubmit = searchName => {
@@ -25,7 +26,7 @@ export class App extends Component {
   };
   onData = imagesNew => {
     if (this.state.images !== imagesNew) {
-      this.setState({ images: imagesNew });
+      this.setState({ images: [...this.state.images, ...imagesNew ]});
     }
     return;
   };

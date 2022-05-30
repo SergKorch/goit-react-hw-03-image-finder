@@ -18,7 +18,6 @@
     "react-loader-spinner": "^6.0.0-0",
     "react-scripts": "5.0.0",
     "react-toastify": "^9.0.1",
-    "spin.js": "^4.1.1",
     "vue-simple-spinner": "^1.2.10",
     "web-vitals": "^2.1.3"
   },
