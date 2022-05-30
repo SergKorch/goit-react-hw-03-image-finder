@@ -5,9 +5,9 @@ import s from './item.module.css'
 const ImageGalleryItem = ({  largeImageURL, webformatURL, tags }) => {
   return (
     <li className={s.ImageGalleryItem}>
-        <a className={s.ImageGalleryItem__image} href={largeImageURL}>
-          <img  src={webformatURL} alt={tags} loading="lazy" />
-        </a>
+        {/* <a className={s.ImageGalleryItem__image} href={largeImageURL}> */}
+          <img className={s.ImageGalleryItem__image} src={webformatURL} alt={tags} loading="lazy" />
+        {/* </a> */}
     </li>
   );
 };

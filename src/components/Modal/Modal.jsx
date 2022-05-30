@@ -1,39 +1,42 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { createPortal } from 'react-dom';
 import s from './modal.module.css';
 
 const modalRoot = document.querySelector('#modal-root');
 
 class Modal extends Component {
+  static defaultProps = { onClose: null };
+
+  static propTypes = {
+    onClose: PropTypes.func.isRequired,
+    src: PropTypes.string.isRequired,
+    alt: PropTypes.string.isRequired,
+  };
+
   componentDidMount() {
     window.addEventListener('keydown', this.handleKeyDown);
   }
   handleKeyDown = e => {
     if (e.code === 'Escape') {
-      console.log('Eskape');
       this.props.onClose();
     }
   };
-  handleBackropClick=e=>{
+  handleBackropClick = e => {
     if (e.currentTarget === e.target) {
-        console.log('Eskape');
-        this.props.onClose();
-      }
-  }
+      this.props.onClose();
+    }
+  };
 
   componentWillUnmount() {
     window.removeEventListener('keydown', this.handleKeyDown);
   }
+
   render() {
     return createPortal(
-    //   <div className={s.Overlay} onClick={this.handleBackropClick}>
-    //     <div className={s.Modal}>{this.props.children}</div>
-    //   </div>
       <div className={s.Overlay} onClick={this.handleBackropClick}>
-      <div className={s.Modal}>{this.props.children}
-        <img src="" alt="" />
-      </div>
-    </div>,
+        <img className={s.Modal} src={this.props.src} alt={this.props.alt} />
+      </div>,
       modalRoot
     );
   }
