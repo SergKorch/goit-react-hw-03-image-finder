@@ -14,25 +14,16 @@ class ImageGallery extends Component {
   };
   componentDidUpdate(prevProps, prevState) {
     const nextSearch = this.props.imageName;
-    if (prevProps.imageName !== nextSearch ) {
+    if (prevProps.imageName !== nextSearch || this.props.page>prevProps.page) {
       console.log(prevProps.page)
       this.setState({ loading: true, images: null });
       ImageAPI(nextSearch, this.props.page)
-        .then(images => this.setState({ images }))
+        .then(images => this.setState({ images: images.data.hits }))
         .catch(error => this.setState(error))
         .finally(() => this.setState({ loading: false }));
-    }
-    if (this.props.page>prevProps.page ) {
-      console.log(prevProps.page)
-      this.setState({ loading: true, images: null });
-      ImageAPI(nextSearch, this.props.page)
-        .then(images => this.setState({ images }))
-        .catch(error => this.setState(error))
-        .finally(() => this.setState({ loading: false }));
-    }
-    
-    this.props.onData(this.state.images);
-  }
+    }   
+    this.props.onData(this.state.images);}
+
   imageClick = e => {
     if (e.target.nodeName === 'IMG') {
       this.setState({ src: e.target.src, alt: e.target.alt });
@@ -64,7 +55,7 @@ class ImageGallery extends Component {
           onClick={this.imageClick}
         >
           {this.state.images &&
-            this.state.images.data.hits.map(
+            this.state.images.map(
               ({ id, webformatURL, largeImageURL, tags }) => (
                 <ImageGalleryItem
                   key={id}

@@ -25,8 +25,16 @@ export class App extends Component {
     return;
   };
   onData = imagesNew => {
-    if (this.state.images !== imagesNew) {
-      this.setState({ images: [...this.state.images, ...imagesNew ]});
+    if (this.state.images !== imagesNew && imagesNew !== null) {
+      if (this.state.images === null && this.state.page===1) {
+        return this.setState({ images: imagesNew });
+      } else {
+
+        console.log('image=', this.state.images);
+        console.log('imageNew=', imagesNew);
+        // return this.setState({ images: [...this.state.images, ...imagesNew] });
+       this.setState({ images:imagesNew});
+      }
     }
     return;
   };
