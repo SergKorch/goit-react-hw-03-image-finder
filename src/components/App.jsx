@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Notiflix from 'notiflix';
-import s from './phonebook.module.css';
+import s from './finder.module.css';
 import Modal from './Modal';
 import ImageGallery from './ImageGallery';
 import Searchbar from './Searchbar';

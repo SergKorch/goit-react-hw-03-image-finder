@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import s from './search.module.css';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { GoSearch } from "react-icons/go";
 
 export class Searchbar extends Component {
   static defaultProps = { onSubmit: null };
@@ -44,13 +45,13 @@ export class Searchbar extends Component {
       <header className={s.Searchbar}>
         <form onSubmit={this.handleSubmit} className={s.SearchForm}>
           <button type="submit" className={s.SearchForm__button}>
-            <span className={s.SearchForm__button__label}>Search</span>
+            <span className={s.SearchForm__button__label}>Search</span><GoSearch/>
           </button>
           <input
             className={s.SearchForm__input}
             type="text"
-            autocomplete="off"
-            autofocus
+            // autocomplete="off"
+            // autofocus
             placeholder="Search images and photos"
             value={this.state.imageName}
             onChange={this.handleNameChange}

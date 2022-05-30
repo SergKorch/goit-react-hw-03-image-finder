@@ -18,7 +18,8 @@ class ImageGallery extends Component {
       ImageAPI(nextSearch, this.props.page)
         .then(images => this.setState({ images }))
         .catch(error => this.setState(error))
-        .finally(() => this.setState({ loading: false }));
+        .finally(() => this.setState({ loading: false})
+         );
         
     }
     this.props.onData(this.state.images);
@@ -27,8 +28,8 @@ class ImageGallery extends Component {
     return (
       <div>
         {this.state.error && <p>ERROR</p>}
-
-        {this.state.loading && <Loader />}
+{this.state.loading && <p>Loading</p>}
+{this.state.loading && <Loader loading={this.state.loading}/>}
         <ul id='gallerySection' className={s.ImageGallery}>
           {this.state.images &&
             this.state.images.data.hits.map(
