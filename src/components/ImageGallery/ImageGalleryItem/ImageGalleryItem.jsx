@@ -1,22 +1,22 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
-import s from './item.module.css'
+import PropTypes from 'prop-types';
+import s from './item.module.css';
 
-const ImageGalleryItem = ({  largeImageURL, webformatURL, tags }) => {
+const ImageGalleryItem = ({ webformatURL, tags }) => {
   return (
     <li className={s.ImageGalleryItem}>
-        {/* <a className={s.ImageGalleryItem__image} href={largeImageURL}> */}
-          <img className={s.ImageGalleryItem__image} src={webformatURL} alt={tags} loading="lazy" />
-        {/* </a> */}
+      <img
+        className={s.ImageGalleryItem__image}
+        src={webformatURL}
+        alt={tags}
+      />
     </li>
   );
 };
 
-// ContactListItem.propTypes = {
-//   id: PropTypes.string.isRequired,
-//   nameContact: PropTypes.string.isRequired,
-//   number: PropTypes.string.isRequired,
-//   deleteContact: PropTypes.func.isRequired,
-// };
+ImageGalleryItem.propTypes = {
+  webformatURL: PropTypes.string.isRequired,
+  tags: PropTypes.string.isRequired,
+};
 
 export default ImageGalleryItem;
