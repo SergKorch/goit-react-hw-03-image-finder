@@ -6,6 +6,7 @@ import Button from './Button';
 import ImageAPI from './imageAPI';
 import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 
 export class App extends Component {
   state = {
@@ -42,6 +43,30 @@ export class App extends Component {
     }
   }
   onData = imagesNew => {
+    // if (imagesNew.data.totalHits === 0) {
+    //   toast.warn('Введите корректно поиск!', {
+    //     position: 'top-right',
+    //     autoClose: 5000,
+    //     hideProgressBar: false,
+    //     closeOnClick: true,
+    //     pauseOnHover: true,
+    //     draggable: true,
+    //     progress: undefined,
+    //   });
+    //   return;
+    // }
+    // if (imagesNew.data.totalHits !== 0 && imagesNew.data.hits.length === 0) {
+    //   toast.warn('Введите корректно поиск!', {
+    //     position: 'top-right',
+    //     autoClose: 5000,
+    //     hideProgressBar: false,
+    //     closeOnClick: true,
+    //     pauseOnHover: true,
+    //     draggable: true,
+    //     progress: undefined,
+    //   });
+    //   return;
+    // }
     if (this.state.images !== imagesNew && imagesNew !== null) {
       if (this.state.images === null && this.state.page === 1) {
         this.setState({ images: imagesNew.data.hits });
