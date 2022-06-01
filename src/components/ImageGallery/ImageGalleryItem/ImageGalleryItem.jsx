@@ -16,6 +16,7 @@ const ImageGalleryItem = ({ id, webformatURL, tags }) => {
 };
 
 ImageGalleryItem.propTypes = {
+  id: PropTypes.number.isRequired,
   webformatURL: PropTypes.string.isRequired,
   tags: PropTypes.string.isRequired,
 };

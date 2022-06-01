@@ -11,6 +11,7 @@ class ImageGallery extends Component {
   };
   static propTypes = {
     images: PropTypes.array.isRequired,
+    status: PropTypes.string.isRequired,
   };
 
   imageClick = e => {
@@ -31,19 +32,17 @@ class ImageGallery extends Component {
     const { images } = this.props;
     return (
       <div>
-        {/* {error && <p>ERROR</p>} */}
         <ul
           id="gallerySection"
           className={s.ImageGallery}
           onClick={this.imageClick}
         >
           {images &&
-            images.map(({ id, webformatURL, largeImageURL, tags }) => (
+            images.map(({ id, webformatURL, tags }) => (
               <ImageGalleryItem
                 key={id}
                 id={id}
                 webformatURL={webformatURL}
-                largeImageURL={largeImageURL}
                 tags={tags}
               />
             ))}
