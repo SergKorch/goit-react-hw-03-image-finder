@@ -4,9 +4,8 @@ import ImageGallery from './ImageGallery';
 import Searchbar from './Searchbar';
 import Button from './Button';
 import ImageAPI from './imageAPI';
-import { ToastContainer} from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { toast } from 'react-toastify';
 
 export class App extends Component {
   state = {
@@ -29,7 +28,7 @@ export class App extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (prevState.imageName !== this.state.imageName) {
       this.setState({ loading: true, images: null });
-      ImageAPI(this.props.imageName, this.props.page)
+      ImageAPI(this.state.imageName, this.state.page)
         .then(this.onData)
         .catch(error => this.setState(error))
         .finally(() => this.setState({ loading: false }));
@@ -43,30 +42,18 @@ export class App extends Component {
     }
   }
   onData = imagesNew => {
-    // if (imagesNew.data.totalHits === 0) {
-    //   toast.warn('Введите корректно поиск!', {
-    //     position: 'top-right',
-    //     autoClose: 5000,
-    //     hideProgressBar: false,
-    //     closeOnClick: true,
-    //     pauseOnHover: true,
-    //     draggable: true,
-    //     progress: undefined,
-    //   });
-    //   return;
-    // }
-    // if (imagesNew.data.totalHits !== 0 && imagesNew.data.hits.length === 0) {
-    //   toast.warn('Введите корректно поиск!', {
-    //     position: 'top-right',
-    //     autoClose: 5000,
-    //     hideProgressBar: false,
-    //     closeOnClick: true,
-    //     pauseOnHover: true,
-    //     draggable: true,
-    //     progress: undefined,
-    //   });
-    //   return;
-    // }
+    if (imagesNew.data.totalHits === 0) {
+      toast.warn('Введите корректно поиск!', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
     if (this.state.images !== imagesNew && imagesNew !== null) {
       if (this.state.images === null && this.state.page === 1) {
         this.setState({ images: imagesNew.data.hits });
@@ -106,13 +93,17 @@ export class App extends Component {
           draggable
           pauseOnHover
         />
-        {this.state.images && <ImageGallery
-          images={this.state.images}
-          loading={this.state.loading}
-        />}
-        {this.state.images && !this.state.loading && (this.state.images.length!==0) && (
-          <Button onClick={this.onClickLoadMore} />
+        {this.state.images && (
+          <ImageGallery
+            images={this.state.images}
+            loading={this.state.loading}
+          />
         )}
+        {this.state.images &&
+          !this.state.loading &&
+          this.state.images.length !== 0 && (
+            <Button onClick={this.onClickLoadMore} />
+          )}
       </div>
     );
   }
