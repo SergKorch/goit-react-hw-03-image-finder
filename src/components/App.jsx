@@ -4,13 +4,14 @@ import ImageGallery from './ImageGallery';
 import Searchbar from './Searchbar';
 import Button from './Button';
 import ImageAPI from './imageAPI';
+import ErrorMessage from './ErrorMessage';
 import { ToastContainer, toast } from 'react-toastify';
+import { BallTriangle } from 'react-loader-spinner';
 import 'react-toastify/dist/ReactToastify.css';
 
 export class App extends Component {
   state = {
     imageName: '',
-    loading: false,
     page: 1,
     images: null,
     imagesNew: null,
@@ -29,23 +30,22 @@ export class App extends Component {
   componentDidUpdate(prevProps, prevState) {
     const { imageName, page } = this.state;
     if (prevState.imageName !== imageName) {
-      this.setState({ loading: true, images: null });
+      this.setState({ status: 'pending', images: null });
       ImageAPI(imageName, page)
         .then(this.onData)
-        .catch(error => this.setState({ error, status: 'rejected' }))
-        .finally(() => this.setState({ loading: false }));
+        .catch(error => this.setState({ error, status: 'rejected' }));
     }
     if (page > 1 && prevState.page !== page) {
-      this.setState({ loading: true });
+      this.setState({ status: 'pending' });
       ImageAPI(imageName, page)
         .then(this.onData)
-        .catch(error => this.setState({ error, status: 'rejected' }))
-        .finally(() => this.setState({ loading: false }));
+        .catch(error => this.setState({ error, status: 'rejected' }));
     }
   }
   onData = imagesNew => {
     const { images, page } = this.state;
     if (imagesNew.data.totalHits === 0) {
+      this.setState({ error: 'Изображений не найдено', status: 'rejected' });
       toast.warn('Введите корректно поиск!', {
         position: 'top-right',
         autoClose: 5000,
@@ -59,10 +59,11 @@ export class App extends Component {
     }
     if (images !== imagesNew && imagesNew !== null) {
       if (images === null && page === 1) {
-        this.setState({ images: imagesNew.data.hits });
+        this.setState({ status: 'resolved', images: imagesNew.data.hits });
       }
       if (page !== 1 && imagesNew !== null) {
         this.setState({
+          status: 'resolved',
           images: [...images, ...imagesNew.data.hits],
         });
       }
@@ -77,15 +78,11 @@ export class App extends Component {
   };
 
   render() {
-    const { status, error, images, loading } = this.state;
+    const { status, error, images } = this.state;
     return (
       <div className={s.App}>
         <Searchbar handleSubmitOfSearch={this.handleSubmitOfSearch} />
-        {status === 'rejected' && (
-          <div className={s.Error}>
-            <p>{`Whoops, something went wrong: ${error}`}</p>
-          </div>
-        )}
+        {status === 'rejected' && <ErrorMessage errorMes={error} />}
         <ToastContainer
           position="top-right"
           autoClose={3000}
@@ -98,11 +95,22 @@ export class App extends Component {
           pauseOnHover
         />
         {images && images.length > 0 && (
-          <ImageGallery images={images} loading={loading} />
+          <ImageGallery images={images} status={status} />
         )}
-        {images && images.length > 0 && !loading && images.length !== 0 && (
-          <Button onClick={this.onClickLoadMore} />
+        {status === 'pending' && (
+          <div className={s.BallTriangle}>
+            <BallTriangle
+              type="ThreeDots"
+              color="#2BAD60"
+              height="100"
+              width="100"
+            />
+          </div>
         )}
+        {status === 'resolved' &&
+          images &&
+          images.length > 0 &&
+          images.length !== 0 && <Button onClick={this.onClickLoadMore} />}
       </div>
     );
   }

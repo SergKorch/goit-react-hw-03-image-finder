@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import Modal from '../Modal';
 import ImageGalleryItem from './ImageGalleryItem';
 import s from './gallery.module.css';
-import { BallTriangle } from 'react-loader-spinner';
 class ImageGallery extends Component {
   state = {
     src: null,
@@ -16,7 +15,9 @@ class ImageGallery extends Component {
 
   imageClick = e => {
     if (e.target.nodeName === 'IMG') {
-      this.setState({ src: e.target.src, alt: e.target.alt });
+      const { images } = this.props;
+      let findElement = images.find(img => img.id === Number(e.target.id));
+      this.setState({ src: findElement.largeImageURL, alt: e.target.alt });
       this.toggleModal();
     }
   };
@@ -27,7 +28,7 @@ class ImageGallery extends Component {
   };
   render() {
     const { showModal, src, alt } = this.state;
-    const { images, loading } = this.props;
+    const { images } = this.props;
     return (
       <div>
         {/* {error && <p>ERROR</p>} */}
@@ -40,22 +41,13 @@ class ImageGallery extends Component {
             images.map(({ id, webformatURL, largeImageURL, tags }) => (
               <ImageGalleryItem
                 key={id}
+                id={id}
                 webformatURL={webformatURL}
                 largeImageURL={largeImageURL}
                 tags={tags}
               />
             ))}
         </ul>
-        {loading && (
-          <div className={s.BallTriangle}>
-            <BallTriangle
-              type="ThreeDots"
-              color="#2BAD60"
-              height="100"
-              width="100"
-            />
-          </div>
-        )}
         {showModal && <Modal onClose={this.toggleModal} src={src} alt={alt} />}
       </div>
     );

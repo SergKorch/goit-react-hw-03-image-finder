@@ -1,1 +1,1 @@
-export {default} from './imageAPI'
+export { default } from './imageAPI';
