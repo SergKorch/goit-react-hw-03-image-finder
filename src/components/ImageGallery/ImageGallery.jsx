@@ -6,7 +6,8 @@ import s from './gallery.module.css';
 import { BallTriangle } from 'react-loader-spinner';
 class ImageGallery extends Component {
   state = {
-    error: null,
+    src: null,
+    alt: null,
     showModal: false,
   };
   static propTypes = {
@@ -25,27 +26,27 @@ class ImageGallery extends Component {
     }));
   };
   render() {
+    const { showModal, src, alt } = this.state;
+    const { images, loading } = this.props;
     return (
       <div>
-        {this.state.error && <p>ERROR</p>}
+        {/* {error && <p>ERROR</p>} */}
         <ul
           id="gallerySection"
           className={s.ImageGallery}
           onClick={this.imageClick}
         >
-          {this.props.images &&
-            this.props.images.map(
-              ({ id, webformatURL, largeImageURL, tags }) => (
-                <ImageGalleryItem
-                  key={id}
-                  webformatURL={webformatURL}
-                  largeImageURL={largeImageURL}
-                  tags={tags}
-                />
-              )
-            )}
+          {images &&
+            images.map(({ id, webformatURL, largeImageURL, tags }) => (
+              <ImageGalleryItem
+                key={id}
+                webformatURL={webformatURL}
+                largeImageURL={largeImageURL}
+                tags={tags}
+              />
+            ))}
         </ul>
-        {this.props.loading && (
+        {loading && (
           <div className={s.BallTriangle}>
             <BallTriangle
               type="ThreeDots"
@@ -55,13 +56,7 @@ class ImageGallery extends Component {
             />
           </div>
         )}
-        {this.state.showModal && (
-          <Modal
-            onClose={this.toggleModal}
-            src={this.state.src}
-            alt={this.state.alt}
-          />
-        )}
+        {showModal && <Modal onClose={this.toggleModal} src={src} alt={alt} />}
       </div>
     );
   }

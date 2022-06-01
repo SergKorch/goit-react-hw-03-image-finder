@@ -24,6 +24,7 @@ export class Searchbar extends Component {
   handleSubmit = e => {
     e.preventDefault();
     const { imageName } = this.state;
+    const { handleSubmitOfSearch } = this.props;
     const normalizeImageName = imageName.trim().toLowerCase();
     if (!normalizeImageName) {
       toast.warn('Введите поиск!', {
@@ -37,11 +38,12 @@ export class Searchbar extends Component {
       });
       return;
     }
-    this.props.handleSubmitOfSearch(normalizeImageName);
+    handleSubmitOfSearch(normalizeImageName);
     this.setState({ imageName: '' });
   };
 
   render() {
+    const { imageName } = this.state;
     return (
       <header className={s.Searchbar}>
         <form onSubmit={this.handleSubmit} className={s.SearchForm}>
@@ -55,7 +57,7 @@ export class Searchbar extends Component {
             autoComplete="off"
             autoFocus
             placeholder="Search images and photos"
-            value={this.state.imageName}
+            value={imageName}
             onChange={this.handleNameChange}
           />
         </form>

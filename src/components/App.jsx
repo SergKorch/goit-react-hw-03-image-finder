@@ -19,29 +19,32 @@ export class App extends Component {
   };
 
   handleSubmitOfSearch = searchName => {
-    if (this.state.imageName !== searchName) {
+    const { imageName } = this.state;
+    if (imageName !== searchName) {
       this.setState({ imageName: searchName, page: 1 });
     }
     return;
   };
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.imageName !== this.state.imageName) {
+    const { imageName, page } = this.state;
+    if (prevState.imageName !== imageName) {
       this.setState({ loading: true, images: null });
-      ImageAPI(this.state.imageName, this.state.page)
+      ImageAPI(imageName, page)
         .then(this.onData)
-        .catch(error => this.setState(error))
+        .catch(error => this.setState({ error, status: 'rejected' }))
         .finally(() => this.setState({ loading: false }));
     }
-    if (this.state.page > 1 && prevState.page !== this.state.page) {
+    if (page > 1 && prevState.page !== page) {
       this.setState({ loading: true });
-      ImageAPI(this.state.imageName, this.state.page)
+      ImageAPI(imageName, page)
         .then(this.onData)
-        .catch(error => this.setState(error))
+        .catch(error => this.setState({ error, status: 'rejected' }))
         .finally(() => this.setState({ loading: false }));
     }
   }
   onData = imagesNew => {
+    const { images, page } = this.state;
     if (imagesNew.data.totalHits === 0) {
       toast.warn('Введите корректно поиск!', {
         position: 'top-right',
@@ -54,13 +57,13 @@ export class App extends Component {
       });
       return;
     }
-    if (this.state.images !== imagesNew && imagesNew !== null) {
-      if (this.state.images === null && this.state.page === 1) {
+    if (images !== imagesNew && imagesNew !== null) {
+      if (images === null && page === 1) {
         this.setState({ images: imagesNew.data.hits });
       }
-      if (this.state.page !== 1 && imagesNew !== null) {
+      if (page !== 1 && imagesNew !== null) {
         this.setState({
-          images: [...this.state.images, ...imagesNew.data.hits],
+          images: [...images, ...imagesNew.data.hits],
         });
       }
       return;
@@ -74,12 +77,13 @@ export class App extends Component {
   };
 
   render() {
+    const { status, error, images, loading } = this.state;
     return (
       <div className={s.App}>
         <Searchbar handleSubmitOfSearch={this.handleSubmitOfSearch} />
-        {this.state.status === 'rejected' && (
+        {status === 'rejected' && (
           <div className={s.Error}>
-            <p>{`Something went wrong! ${this.state.error}`}</p>
+            <p>{`Whoops, something went wrong: ${error}`}</p>
           </div>
         )}
         <ToastContainer
@@ -93,17 +97,12 @@ export class App extends Component {
           draggable
           pauseOnHover
         />
-        {this.state.images && (
-          <ImageGallery
-            images={this.state.images}
-            loading={this.state.loading}
-          />
+        {images && images.length > 0 && (
+          <ImageGallery images={images} loading={loading} />
         )}
-        {this.state.images &&
-          !this.state.loading &&
-          this.state.images.length !== 0 && (
-            <Button onClick={this.onClickLoadMore} />
-          )}
+        {images && images.length > 0 && !loading && images.length !== 0 && (
+          <Button onClick={this.onClickLoadMore} />
+        )}
       </div>
     );
   }

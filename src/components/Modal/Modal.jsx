@@ -18,13 +18,15 @@ class Modal extends Component {
     window.addEventListener('keydown', this.handleKeyDown);
   }
   handleKeyDown = e => {
+    const { onClose } = this.props;
     if (e.code === 'Escape') {
-      this.props.onClose();
+      onClose();
     }
   };
   handleBackropClick = e => {
+    const { onClose } = this.props;
     if (e.currentTarget === e.target) {
-      this.props.onClose();
+      onClose();
     }
   };
 
@@ -33,10 +35,11 @@ class Modal extends Component {
   }
 
   render() {
+    const { src, alt } = this.props;
     return createPortal(
-      <div className={s.Overlay}  onClick={this.handleBackropClick}>
+      <div className={s.Overlay} onClick={this.handleBackropClick}>
         <div className={s.Modal}>
-          <img src={this.props.src} alt={this.props.alt} />
+          <img src={src} alt={alt} />
         </div>
       </div>,
       modalRoot
