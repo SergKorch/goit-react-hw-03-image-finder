@@ -6,7 +6,6 @@ import s from './gallery.module.css';
 import { BallTriangle } from 'react-loader-spinner';
 class ImageGallery extends Component {
   state = {
-    loading: false,
     error: null,
     showModal: false,
   };
