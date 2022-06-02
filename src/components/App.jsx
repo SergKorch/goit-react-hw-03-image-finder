@@ -13,29 +13,29 @@ export class App extends Component {
   state = {
     imageName: '',
     page: 1,
-    images: null,
+    images: [],
     imagesNew: null,
     error: null,
     status: 'idle',
+    pages: null,
   };
 
   handleSubmitOfSearch = searchName => {
     const { imageName } = this.state;
     if (imageName !== searchName) {
-      this.setState({ imageName: searchName, page: 1 });
+      this.setState({
+        imageName: searchName,
+        page: 1,
+        images: [],
+        pages: null,
+      });
     }
     return;
   };
 
   componentDidUpdate(prevProps, prevState) {
     const { imageName, page } = this.state;
-    if (prevState.imageName !== imageName) {
-      this.setState({ status: 'pending', images: null });
-      ImageAPI(imageName, page)
-        .then(this.onData)
-        .catch(error => this.setState({ error, status: 'rejected' }));
-    }
-    if (page > 1 && prevState.page !== page) {
+    if (prevState.imageName !== imageName || prevState.page !== page) {
       this.setState({ status: 'pending' });
       ImageAPI(imageName, page)
         .then(this.onData)
@@ -57,18 +57,16 @@ export class App extends Component {
       });
       return;
     }
-    if (images !== imagesNew && imagesNew !== null) {
-      if (images === null && page === 1) {
-        this.setState({ status: 'resolved', images: imagesNew.data.hits });
-      }
-      if (page !== 1 && imagesNew !== null) {
-        this.setState({
+    if (images !== imagesNew && imagesNew !== null && page >= 1) {
+      this.setState(prevState => {
+        return {
           status: 'resolved',
-          images: [...images, ...imagesNew.data.hits],
-        });
-      }
-      return;
+          pages: Math.ceil(imagesNew.data.totalHits / 12),
+          images: [...prevState.images, ...imagesNew.data.hits],
+        };
+      });
     }
+    return;
   };
 
   onClickLoadMore = () => {
@@ -78,7 +76,7 @@ export class App extends Component {
   };
 
   render() {
-    const { status, error, images } = this.state;
+    const { status, error, images, pages, page } = this.state;
     return (
       <div className={s.App}>
         <Searchbar handleSubmitOfSearch={this.handleSubmitOfSearch} />
@@ -108,6 +106,7 @@ export class App extends Component {
           </div>
         )}
         {status === 'resolved' &&
+          page !== pages &&
           images &&
           images.length > 0 &&
           images.length !== 0 && <Button onClick={this.onClickLoadMore} />}

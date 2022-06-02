@@ -10,7 +10,11 @@ class ImageGallery extends Component {
     showModal: false,
   };
   static propTypes = {
-    images: PropTypes.array.isRequired,
+    images: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number.isRequired,
+      }).isRequired
+    ),
     status: PropTypes.string.isRequired,
   };
 

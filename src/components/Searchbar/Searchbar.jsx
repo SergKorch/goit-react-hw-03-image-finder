@@ -39,7 +39,6 @@ export class Searchbar extends Component {
       return;
     }
     handleSubmitOfSearch(normalizeImageName);
-    this.setState({ imageName: '' });
   };
 
   render() {
